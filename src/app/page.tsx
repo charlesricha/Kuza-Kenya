@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
 import { ChatBubble } from '@/components/chat-bubble';
+import { ChatInterface } from '@/components/chat-interface';
 
 export default function Home() {
   return (
@@ -18,8 +18,8 @@ export default function Home() {
           </nav>
         </div>
       </header>
-      <main className="flex-1 flex items-center">
-        <div className="container px-8">
+      <main className="flex-1">
+        <section className="flex items-center min-h-screen container px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="flex flex-col justify-center space-y-6">
               <div className="relative pl-8">
@@ -33,10 +33,15 @@ export default function Home() {
                   Make reports and refine your country
                 </p>
               </div>
-              <div className="pl-8">
+              <div className="pl-8 flex gap-4 items-center">
                 <Button asChild size="lg" className="px-10 py-6 text-lg">
                   <Link href="/report">
                     Get Started
+                  </Link>
+                </Button>
+                 <Button asChild variant="outline" size="lg" className="px-10 py-6 text-lg">
+                  <Link href="/#chatbot">
+                    Chat with Kiboko
                   </Link>
                 </Button>
               </div>
@@ -53,7 +58,12 @@ export default function Home() {
               <ChatBubble />
             </div>
           </div>
-        </div>
+        </section>
+        <section id="chatbot" className="py-20 bg-card">
+            <div className="container px-8">
+                <ChatInterface />
+            </div>
+        </section>
       </main>
     </div>
   );
