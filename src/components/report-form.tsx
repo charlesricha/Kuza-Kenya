@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Camera, MapPin, Loader2, Send } from 'lucide-react';
+import { Camera, MapPin, Loader2, Send, LocateFixed } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { GoogleMap } from "./google-map";
+import { useToast } from "@/hooks/use-toast";
 
 type LatLng = {
     lat: number;
@@ -16,9 +16,11 @@ type LatLng = {
 
 export function ReportForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isFetchingLocation, setIsFetchingLocation] = useState(false);
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [location, setLocation] = useState<LatLng>(null);
+    const { toast } = useToast();
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -32,13 +34,39 @@ export function ReportForm() {
         }
     };
 
-    const handleMapClick = (e: google.maps.MapMouseEvent) => {
-        if (e.latLng) {
-            setLocation({
-                lat: e.latLng.lat(),
-                lng: e.latLng.lng(),
+    const handleLocationClick = () => {
+        if (!navigator.geolocation) {
+            toast({
+                variant: "destructive",
+                title: "Geolocation Not Supported",
+                description: "Your browser does not support geolocation.",
             });
+            return;
         }
+
+        setIsFetchingLocation(true);
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setLocation({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                });
+                setIsFetchingLocation(false);
+                 toast({
+                    title: "Location Found",
+                    description: "Your current location has been successfully set.",
+                });
+            },
+            (error) => {
+                setIsFetchingLocation(false);
+                toast({
+                    variant: "destructive",
+                    title: "Location Error",
+                    description: "Could not retrieve your location. Please ensure you have granted permission.",
+                });
+                console.error("Geolocation error:", error);
+            }
+        );
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,8 +74,9 @@ export function ReportForm() {
         setIsSubmitting(true);
         // Simulate submission
         await new Promise(resolve => setTimeout(resolve, 2000));
-        console.log("Submitting with location:", location);
+        console.log("Submitting with location:", location, "and image:", selectedImage?.name);
         setIsSubmitting(false);
+        // Reset form or redirect
     };
 
     return (
@@ -86,20 +115,32 @@ export function ReportForm() {
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="location">
+                        <Label>
                             <MapPin className="inline-block mr-2 h-4 w-4" />
-                            Location (Click on the map to select)
+                            Location
                         </Label>
-                        <GoogleMap selectedLocation={location} onMapClick={handleMapClick} />
+                         <Button type="button" variant="outline" onClick={handleLocationClick} disabled={isFetchingLocation} className="w-full">
+                            {isFetchingLocation ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Fetching Location...
+                                </>
+                            ) : (
+                                <>
+                                    <LocateFixed className="mr-2 h-4 w-4" />
+                                    Use My Current Location
+                                </>
+                            )}
+                        </Button>
                          {location && (
-                            <p className="text-sm text-muted-foreground">
-                                Selected Location: Lat: {location.lat.toFixed(4)}, Lng: {location.lng.toFixed(4)}
+                            <p className="text-sm text-muted-foreground pt-2">
+                                Location set: Latitude {location.lat.toFixed(4)}, Longitude {location.lng.toFixed(4)}
                             </p>
                         )}
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    <Button type="submit" className="w-full" disabled={isSubmitting || !location}>
                         {isSubmitting ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
