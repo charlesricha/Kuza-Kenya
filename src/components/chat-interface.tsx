@@ -22,7 +22,7 @@ type Message = {
 
 const UserAvatar = () => (
   <Avatar className="h-10 w-10">
-    <AvatarFallback className="bg-muted text-muted-foreground">
+    <AvatarFallback className="bg-secondary text-secondary-foreground">
       <User className="h-6 w-6" />
     </AvatarFallback>
   </Avatar>
@@ -119,7 +119,7 @@ export function ChatInterface() {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto shadow-2xl rounded-2xl overflow-hidden">
+    <Card className="w-full max-w-2xl mx-auto shadow-2xl rounded-2xl overflow-hidden border-0">
       <CardHeader className="text-center bg-card">
         <CardTitle className="font-headline text-3xl text-primary">Kiboko Kuza</CardTitle>
         <CardDescription>Your friendly assistant for community issues</CardDescription>
@@ -140,11 +140,11 @@ export function ChatInterface() {
                         )}
                         <div
                             className={cn(
-                                "max-w-[80%] rounded-2xl p-3 px-4 text-card-foreground",
+                                "max-w-[80%] rounded-2xl p-3 px-4",
                                 message.role === "user"
                                 ? "bg-primary text-primary-foreground rounded-br-none"
-                                : "bg-muted rounded-bl-none",
-                                message.role === "tip" && "bg-accent/30 border border-accent rounded-bl-none text-accent-foreground"
+                                : "bg-secondary text-secondary-foreground rounded-bl-none",
+                                message.role === "tip" && "bg-accent/30 border border-accent rounded-bl-none"
                             )}
                         >
                             <p className="text-sm">{message.content}</p>
@@ -155,7 +155,7 @@ export function ChatInterface() {
                 {isLoading && (
                   <div className="flex items-start gap-3">
                     <BotAvatar />
-                    <div className="bg-muted rounded-2xl p-3 px-4 text-sm rounded-bl-none">
+                    <div className="bg-secondary rounded-2xl p-3 px-4 text-sm rounded-bl-none">
                       <div className="flex items-center justify-center gap-2 h-5">
                         <span className="h-2 w-2 rounded-full bg-muted-foreground animate-pulse [animation-delay:0s]"></span>
                         <span className="h-2 w-2 rounded-full bg-muted-foreground animate-pulse [animation-delay:0.2s]"></span>
@@ -168,14 +168,14 @@ export function ChatInterface() {
             </div>
         </ScrollArea>
       </CardContent>
-      <CardFooter className="p-4 bg-muted/50 border-t">
+      <CardFooter className="p-4 bg-secondary/50 border-t">
         <form onSubmit={handleSubmit} className="flex w-full items-center gap-2">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Ask about potholes, rubbish..."
             disabled={isLoading}
-            className="flex-1 text-base"
+            className="flex-1 text-base bg-background"
             aria-label="Your message"
           />
           <Button type="submit" size="icon" disabled={isLoading || !inputValue.trim()} aria-label="Send message">

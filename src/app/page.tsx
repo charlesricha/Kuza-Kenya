@@ -1,88 +1,60 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-import { ChatInterface } from '@/components/chat-interface';
+import { ChatBubble } from '@/components/chat-bubble';
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
+      <header className="absolute top-0 z-50 w-full">
+        <div className="container flex h-20 max-w-screen-2xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-6 w-6 text-primary"
-            >
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-            <span className="font-bold">Kiboko Kuza</span>
+            <span className="text-xl font-bold">Kuza Kenya</span>
           </Link>
-          <Button asChild>
-            <Link href="/report">
-              Get Started <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+          <nav className="hidden md:flex gap-6">
+            <Link href="/" className="text-sm font-medium hover:underline underline-offset-4">Home</Link>
+            <Link href="#about" className="text-sm font-medium text-muted-foreground hover:underline underline-offset-4">About Us</Link>
+            <Link href="/report" className="text-sm font-medium text-muted-foreground hover:underline underline-offset-4">Report</Link>
+          </nav>
         </div>
       </header>
-      <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Improve Your Community, One Report at a Time
-                  </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    See a pothole? Overflowing rubbish? Let us know. KuzaKenya makes it easy to report local issues and track their resolution.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button asChild size="lg">
-                    <Link href="/report">Report an Issue</Link>
-                  </Button>
-                  <Button asChild variant="outline" size="lg">
-                     <Link href="#chatbot">Ask Kiboko</Link>
-                  </Button>
-                </div>
+      <main className="flex-1 flex items-center">
+        <div className="container">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="flex flex-col justify-center space-y-6">
+              <div className="relative pl-8">
+                 <div className="absolute left-0 top-0 h-full w-1 bg-primary rounded-full"></div>
+                 <div className="absolute left-[-0.625rem] top-0 h-6 w-6 bg-primary rounded-full"></div>
+
+                <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
+                  Hi, Welcome to <br /> Kuza Kenya
+                </h1>
+                <p className="mt-4 max-w-[600px] text-muted-foreground md:text-xl">
+                  Make reports and refine your country
+                </p>
               </div>
-              <img
-                src="https://placehold.co/600x600.png"
-                width="600"
-                height="600"
-                alt="Community improvement"
-                className="mx-auto aspect-square overflow-hidden rounded-xl object-cover sm:w-full lg:order-last"
-                data-ai-hint="happy community"
+              <div className="pl-8">
+                <Button asChild size="lg" className="px-10 py-6 text-lg">
+                  <Link href="/report">
+                    Get Started
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            <div className="relative flex justify-center items-center">
+               <img
+                src="https://placehold.co/450x450.png"
+                width="450"
+                height="450"
+                alt="Kimbo the AI assistant Hippo"
+                className="mx-auto"
+                data-ai-hint="cute hippo mascot"
               />
+              <ChatBubble />
             </div>
           </div>
-        </section>
-        <section id="chatbot" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-           <div className="container px-4 md:px-6">
-              <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                  <div className="space-y-2">
-                      <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Have Questions? Ask Kiboko!</h2>
-                      <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                          Our AI assistant, Kiboko, is here to help. Ask anything about the reporting process, our platform, or how you can contribute.
-                      </p>
-                  </div>
-              </div>
-               <div className="mx-auto w-full max-w-2xl pt-10">
-                  <ChatInterface />
-              </div>
-           </div>
-        </section>
+        </div>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">&copy; 2024 KuzaKenya. All rights reserved.</p>
-     </footer>
     </div>
   );
 }
