@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { Camera, MapPin, Loader2, Send, LocateFixed } from 'lucide-react';
+import { useState, useRef } from "react";
+import { Camera, MapPin, Loader2, Send, LocateFixed, CheckCircle } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { submitReport } from "@/app/actions";
 
 type LatLng = {
     lat: number;
@@ -20,7 +21,9 @@ export function ReportForm() {
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [location, setLocation] = useState<LatLng>(null);
+    const [isSubmitted, setIsSubmitted] = useState(false);
     const { toast } = useToast();
+    const formRef = useRef<HTMLFormElement>(null);
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -71,13 +74,58 @@ export function ReportForm() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!selectedImage || !location) {
+            toast({
+                variant: "destructive",
+                title: "Missing Information",
+                description: "Please provide an image and set your location before submitting.",
+            });
+            return;
+        }
+
         setIsSubmitting(true);
-        // Simulate submission
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        console.log("Submitting with location:", location, "and image:", selectedImage?.name);
+
+        const formData = new FormData(e.currentTarget);
+        formData.append('image', selectedImage);
+        formData.append('latitude', String(location.lat));
+        formData.append('longitude', String(location.lng));
+
+        const result = await submitReport(formData);
+
         setIsSubmitting(false);
-        // Reset form or redirect
+
+        if (result.error) {
+            toast({
+                variant: "destructive",
+                title: "Submission Failed",
+                description: result.error,
+            });
+        } else {
+             toast({
+                title: "Report Submitted!",
+                description: "Thank you for helping improve your community.",
+            });
+            setIsSubmitted(true);
+            // Optionally reset form
+            formRef.current?.reset();
+            setPreviewUrl(null);
+            setSelectedImage(null);
+            setLocation(null);
+        }
     };
+
+    if (isSubmitted) {
+        return (
+            <Card className="w-full max-w-2xl shadow-2xl rounded-2xl">
+                 <CardContent className="flex flex-col items-center justify-center p-10 space-y-4">
+                    <CheckCircle className="h-16 w-16 text-green-500" />
+                    <h2 className="text-2xl font-bold">Thank You!</h2>
+                    <p className="text-muted-foreground text-center">Your report has been successfully submitted.</p>
+                    <Button onClick={() => setIsSubmitted(false)}>Submit Another Report</Button>
+                </CardContent>
+            </Card>
+        )
+    }
 
     return (
         <Card className="w-full max-w-2xl shadow-2xl rounded-2xl">
@@ -87,7 +135,7 @@ export function ReportForm() {
                     Help us improve your community by providing details about the issue.
                 </CardDescription>
             </CardHeader>
-            <form onSubmit={handleSubmit}>
+            <form ref={formRef} onSubmit={handleSubmit}>
                 <CardContent className="space-y-6">
                     <div className="space-y-2">
                         <Label htmlFor="picture">
@@ -102,13 +150,14 @@ export function ReportForm() {
                                     <Camera className="w-8 h-8 text-muted-foreground" />
                                 )}
                             </div>
-                            <Input id="picture" type="file" accept="image/*" onChange={handleImageChange} className="flex-1" />
+                            <Input id="picture" name="image" type="file" accept="image/*" onChange={handleImageChange} className="flex-1" required />
                         </div>
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="description">Description</Label>
                         <Textarea
                             id="description"
+                            name="description"
                             placeholder="e.g., 'Large pothole on the main road near the school.'"
                             className="min-h-[100px]"
                             required
@@ -140,7 +189,7 @@ export function ReportForm() {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit" className="w-full" disabled={isSubmitting || !location}>
+                    <Button type="submit" className="w-full" disabled={isSubmitting || !location || !selectedImage}>
                         {isSubmitting ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
