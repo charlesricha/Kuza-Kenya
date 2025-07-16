@@ -7,12 +7,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { GoogleMapPlaceholder } from "./google-map-placeholder";
+import { GoogleMap } from "./google-map";
+
+type LatLng = {
+    lat: number;
+    lng: number;
+} | null;
 
 export function ReportForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [location, setLocation] = useState<LatLng>(null);
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -26,11 +32,21 @@ export function ReportForm() {
         }
     };
 
+    const handleMapClick = (e: google.maps.MapMouseEvent) => {
+        if (e.latLng) {
+            setLocation({
+                lat: e.latLng.lat(),
+                lng: e.latLng.lng(),
+            });
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
         // Simulate submission
         await new Promise(resolve => setTimeout(resolve, 2000));
+        console.log("Submitting with location:", location);
         setIsSubmitting(false);
     };
 
@@ -72,9 +88,14 @@ export function ReportForm() {
                     <div className="space-y-2">
                         <Label htmlFor="location">
                             <MapPin className="inline-block mr-2 h-4 w-4" />
-                            Location
+                            Location (Click on the map to select)
                         </Label>
-                        <GoogleMapPlaceholder />
+                        <GoogleMap selectedLocation={location} onMapClick={handleMapClick} />
+                         {location && (
+                            <p className="text-sm text-muted-foreground">
+                                Selected Location: Lat: {location.lat.toFixed(4)}, Lng: {location.lng.toFixed(4)}
+                            </p>
+                        )}
                     </div>
                 </CardContent>
                 <CardFooter>
