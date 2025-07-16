@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="absolute top-0 z-50 w-full">
-        <div className="container flex h-20 max-w-screen-2xl items-center justify-between">
+        <div className="container flex h-20 max-w-screen-2xl items-center justify-between px-8">
           <Link href="/" className="flex items-center gap-2">
             <span className="text-xl font-bold">Kuza Kenya</span>
           </Link>
@@ -19,7 +19,7 @@ export default function Home() {
         </div>
       </header>
       <main className="flex-1 flex items-center">
-        <div className="container">
+        <div className="container px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="flex flex-col justify-center space-y-6">
               <div className="relative pl-8">
@@ -43,7 +43,7 @@ export default function Home() {
             </div>
             <div className="relative flex justify-center items-center">
                <img
-                src="https://placehold.co/450x450.png"
+                src="https://firebasestorage.googleapis.com/v0/b/firebase-studio-demos.appspot.com/o/projects%2Fkuzakenya-demo%2Fkiboko.png?alt=media&token=8955bce2-4751-455b-801c-1c099394a11f"
                 width="450"
                 height="450"
                 alt="Kimbo the AI assistant Hippo"
