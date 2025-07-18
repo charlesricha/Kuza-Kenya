@@ -51,7 +51,6 @@ export async function submitReport(formData: FormData) {
     return { error: errorMessage };
   }
 
-  // Create a new client instance for each request to ensure fresh connection.
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   const ReportSchema = z.object({
