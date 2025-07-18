@@ -48,7 +48,7 @@ export default function Home() {
             </div>
             <div className="relative flex justify-center items-center">
                <img
-                src="./Kiboko.png"
+                src="/Kiboko.png"
                  width="450"
                 height="450"
                 alt="Kimbo the AI assistant Hippo"
