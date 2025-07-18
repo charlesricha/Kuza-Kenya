@@ -34,14 +34,14 @@ export async function getTip(topic: string) {
   }
 }
 
-const ReportSchema = z.object({
-  description: z.string().min(1, 'Description is required.'),
-  latitude: z.coerce.number(),
-  longitude: z.coerce.number(),
-  image: z.instanceof(File)
-});
-
 export async function submitReport(formData: FormData) {
+  const ReportSchema = z.object({
+    description: z.string().min(1, 'Description is required.'),
+    latitude: z.coerce.number(),
+    longitude: z.coerce.number(),
+    image: z.instanceof(File)
+  });
+
   if (!supabaseUrl || !supabaseKey) {
     return { error: 'Supabase is not configured. Cannot submit report.' };
   }
