@@ -110,8 +110,13 @@ export async function submitReport(formData: FormData) {
 
     return { success: true };
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+    let errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
     console.error('Submission failed:', errorMessage);
-    return { error: `Submission failed: ${errorMessage}` };
+    
+    if (errorMessage.includes('Bucket not found')) {
+      errorMessage = 'Submission failed. The "reports" storage bucket does not exist in your Supabase project. Please create it in the Supabase dashboard.';
+    }
+
+    return { error: errorMessage };
   }
 }
