@@ -14,7 +14,12 @@ if (supabaseUrl && supabaseKey) {
 }
 
 const localAnswers: { [key: string]: string } = {
+    'hello': "Hello there! I'm Kiboko. How can I assist you with Kuza Kenya today?",
+    'hi': "Hi! I'm Kiboko, your friendly assistant. Feel free to ask me about reporting issues.",
+    'hey': "Hey! I'm Kiboko. What can I help you with regarding Kuza Kenya?",
     'what is kuza kenya': 'Kuza Kenya is a platform that allows citizens to report community issues like potholes and rubbish by uploading images.',
+    'about kuza kenya': 'Kuza Kenya is a platform that allows citizens to report community issues like potholes and rubbish by uploading images.',
+    'tell me about': 'Kuza Kenya is a platform that allows citizens to report community issues like potholes and rubbish by uploading images.',
     'how do i report': 'You can report an issue by going to our <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a>. Just fill out the form with a picture and description!',
     'how to report': 'You can report an issue by going to our <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a>. Just fill out the form with a picture and description!',
     'report issue': 'You can report an issue by going to our <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a>. Just fill out the form with a picture and description!',
