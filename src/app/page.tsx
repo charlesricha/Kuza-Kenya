@@ -48,8 +48,7 @@ export default function Home() {
             </div>
             <div className="relative flex justify-center items-center">
                <img
-                src="https://firebasestorage.googleapis.com/v0/b/firebase-studio-demos.appspot.com/o/projects%2Fkuzakenya-demo%2Fkiboko.png?alt=media&token=8955bce2-4751-455b-801c-1c099394a11f"
-                width="450"
+                src="./Kiboko.png"450"
                 height="450"
                 alt="Kimbo the AI assistant Hippo"
                 className="mx-auto w-[250px] h-auto md:w-[450px]"
