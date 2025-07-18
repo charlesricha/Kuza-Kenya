@@ -55,7 +55,7 @@ export default function AboutPage() {
         <div className="flex justify-center">
             <Card className="text-center bg-card/50 border-0 shadow-lg p-6 w-full max-w-sm">
               <Avatar className="w-24 h-24 mx-auto mb-4 border-4 border-primary">
-                <AvatarImage src="/charles.jpg" alt={"Charles Muthui"} />
+                <AvatarImage src="/charles.jpg" alt={"Charles Muthui"} className="object-cover"/>
                 <AvatarFallback>CM</AvatarFallback>
               </Avatar>
               <h3 className="text-xl font-semibold">Charles Muthui</h3>
