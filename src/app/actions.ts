@@ -5,11 +5,14 @@ import { z } from 'zod';
 import { answerQuestion } from '@/ai/flows/answer-questions';
 import { generateUploadTips } from '@/ai/flows/generate-upload-tips';
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+if (!supabaseUrl || !supabaseKey) {
+  console.error("Supabase URL or Key is missing. Please check your .env file.");
+}
+
+const supabase = createClient(supabaseUrl!, supabaseKey!);
 
 export async function getAnswer(question: string) {
   try {
@@ -39,6 +42,9 @@ const ReportSchema = z.object({
 });
 
 export async function submitReport(formData: FormData) {
+  if (!supabaseUrl || !supabaseKey) {
+    return { error: 'Supabase is not configured. Cannot submit report.' };
+  }
   try {
     const parsed = ReportSchema.safeParse({
       description: formData.get('description'),
