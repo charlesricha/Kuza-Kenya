@@ -29,13 +29,11 @@ const prompt = ai.definePrompt({
   name: 'answerQuestionPrompt',
   input: {schema: AnswerQuestionInputSchema},
   output: {schema: AnswerQuestionOutputSchema},
-  prompt: `You are Kiboko, an AI assistant for the KuzaKenya platform. KuzaKenya allows citizens to upload images of things they need corrected, such as potholes and rubbish.
+  prompt: `You are Kiboko, a helpful AI assistant for the KuzaKenya platform. KuzaKenya allows citizens to report community issues like potholes and rubbish by uploading images.
 
-  Answer the following question about the platform:
+  Answer the user's question clearly and concisely.
 
   Question: {{{question}}}
-
-  Provide a helpful and informative answer.  Give multiple unique responses to the same question. Be creative.
   `,
 });
 
