@@ -42,9 +42,15 @@ export function ChatInterface() {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (scrollAreaRef.current) {
+        scrollAreaRef.current.scrollTo({
+            top: scrollAreaRef.current.scrollHeight,
+            behavior: 'smooth'
+        });
+    }
   };
 
   useEffect(() => {
@@ -105,7 +111,7 @@ export function ChatInterface() {
         <CardDescription>Your friendly assistant for community issues</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
-        <ScrollArea className="h-[60vh]">
+        <div className="h-[60vh] overflow-y-auto" ref={scrollAreaRef}>
             <div className="p-6 flex flex-col gap-4">
                 {messages.map((message) => (
                     <div
@@ -144,9 +150,8 @@ export function ChatInterface() {
                     </div>
                   </div>
                 )}
-                <div ref={messagesEndRef} />
             </div>
-        </ScrollArea>
+        </div>
       </CardContent>
       <CardFooter className="p-4 bg-secondary/50 border-t">
         <form onSubmit={handleSubmit} className="flex w-full items-center gap-2">
