@@ -48,32 +48,24 @@ export function ChatInterface() {
   };
 
   useEffect(() => {
-    const fetchInitialTip = async () => {
-      const { tip, error } = await getTip("community issues");
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Error fetching tip",
-          description: error,
-        });
-      } else if (tip) {
-        setMessages([
-          {
-            id: `bot-intro-${Date.now()}`,
-            role: "bot",
-            content: "Hello! I'm Kiboko, your assistant for KuzaKenya. How can I help you today? You can ask me things like 'What is Kuza Kenya?' or 'How do I report an issue?'"
-          },
-          {
-            id: `tip-${Date.now()}`,
-            role: "tip",
-            content: `Quick Tip: ${tip}`,
-          },
-        ]);
-      }
+    const fetchInitialMessages = async () => {
+      const { tip } = await getTip("initial");
+      setMessages([
+        {
+          id: `bot-intro-${Date.now()}`,
+          role: "bot",
+          content: "Hello! I'm Kiboko, your assistant for KuzaKenya. How can I help you today? You can ask me things like 'What is Kuza Kenya?' or 'How do I report an issue?'"
+        },
+        {
+          id: `tip-${Date.now()}`,
+          role: "tip",
+          content: `Quick Tip: ${tip}`,
+        },
+      ]);
       setIsLoading(false);
     };
-    fetchInitialTip();
-  }, [toast]);
+    fetchInitialMessages();
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -92,9 +84,6 @@ export function ChatInterface() {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
     setIsLoading(true);
-
-    // Simulate a short delay for a more natural feel
-    await new Promise(resolve => setTimeout(resolve, 500));
 
     const { answer, error } = await getAnswer(userMessage.content);
 
@@ -155,7 +144,7 @@ export function ChatInterface() {
                         {message.role === "user" && <UserAvatar />}
                     </div>
                 ))}
-                {isLoading && (
+                {isLoading && messages.length > 2 && ( // Only show loading after initial messages
                   <div className="flex items-start gap-3">
                     <BotAvatar />
                     <div className="bg-secondary rounded-2xl p-3 px-4 text-sm rounded-bl-none">
@@ -177,12 +166,12 @@ export function ChatInterface() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Ask about potholes, rubbish..."
-            disabled={isLoading}
+            disabled={isLoading && messages.length === 0} // Disable only on initial load
             className="flex-1 text-base bg-background"
             aria-label="Your message"
           />
-          <Button type="submit" size="icon" disabled={isLoading || !inputValue.trim()} aria-label="Send message">
-            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+          <Button type="submit" size="icon" disabled={(isLoading && messages.length === 0) || !inputValue.trim()} aria-label="Send message">
+            {(isLoading && messages.length > 0) ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           </Button>
         </form>
       </CardFooter>

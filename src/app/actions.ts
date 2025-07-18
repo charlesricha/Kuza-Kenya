@@ -2,8 +2,6 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
-import { getAnswer as getAnswerFromAI } from '@/ai/flows/answer-questions';
-import { getTip as getTipFromAI } from '@/ai/flows/generate-upload-tips';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -15,24 +13,35 @@ if (supabaseUrl && supabaseKey) {
   console.log("Supabase credentials not found. Report submission will be disabled.");
 }
 
+const localAnswers: { [key: string]: string } = {
+    'what is kuza kenya': 'Kuza Kenya is a platform that allows citizens to report community issues like potholes and rubbish by uploading images.',
+    'how do i report': 'You can report an issue by going to our <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a>. Just fill out the form with a picture and description!',
+    'how to report': 'You can report an issue by going to our <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a>. Just fill out the form with a picture and description!',
+    'report issue': 'You can report an issue by going to our <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a>. Just fill out the form with a picture and description!',
+    'pothole': 'Reporting a pothole is easy! Head over to the <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a> to get started.',
+    'rubbish': 'Spotted some rubbish that needs collecting? You can let us know on the <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a>.'
+};
+
 export async function getAnswer(question: string) {
-  try {
-    const result = await getAnswerFromAI(question);
-    return result;
-  } catch (error) {
-    console.error("Error getting answer from AI:", error);
-    return { error: 'Sorry, I had trouble connecting to my brain. Please try again in a moment.' };
+  const normalizedQuestion = question.toLowerCase().trim();
+  let foundAnswer = "I'm sorry, I can only answer questions about Kuza Kenya and how to report issues. Try asking 'What is Kuza Kenya?' or 'How do I report an issue?'.";
+
+  for (const key in localAnswers) {
+    if (normalizedQuestion.includes(key)) {
+      foundAnswer = localAnswers[key];
+      break;
+    }
   }
+  
+  // Simulate a short delay for a more natural feel
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  return { answer: foundAnswer };
 }
 
 export async function getTip(topic: string) {
-  try {
-    const result = await getTipFromAI(topic);
-    return result;
-  } catch (error) {
-    console.error("Error getting tip from AI:", error);
-    return { tip: 'For the best results, make sure your photo is clear and taken during the day.' };
-  }
+  // Return a static tip since AI is disabled
+  return { tip: 'For the best results, make sure your photo is clear and taken during the day.' };
 }
 
 export async function submitReport(formData: FormData) {
