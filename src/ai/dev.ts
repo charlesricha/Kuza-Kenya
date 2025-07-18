@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-config();
+config(); // Load environment variables first
 
 import '@/ai/flows/generate-response-variation.ts';
 import '@/ai/flows/answer-questions.ts';
