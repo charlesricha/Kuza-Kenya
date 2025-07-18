@@ -51,6 +51,7 @@ export async function submitReport(formData: FormData) {
     return { error: errorMessage };
   }
 
+  // Create a new client instance for each request to ensure fresh connection.
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   const ReportSchema = z.object({
@@ -116,7 +117,7 @@ export async function submitReport(formData: FormData) {
     if (errorMessage.includes('Bucket not found')) {
       errorMessage = 'Submission failed. The "reports" storage bucket does not exist. Please create it in your Supabase dashboard and make it public.';
     } else if (errorMessage.includes('violates row-level security policy')) {
-      errorMessage = 'Submission failed due to database security rules. Please create a new RLS policy in your Supabase dashboard to allow "INSERT" operations for the "reports" table.';
+      errorMessage = 'Submission failed due to database security rules. Please ensure you have an RLS policy that allows "INSERT" operations for the "anon" role on the "reports" table.';
     }
 
     return { error: errorMessage };
