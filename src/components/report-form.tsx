@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Camera, MapPin, Loader2, Send, LocateFixed, CheckCircle } from 'lucide-react';
+import { Camera, MapPin, Loader2, Send, LocateFixed, CheckCircle, Plus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { submitReport } from "@/app/actions";
+import { cn } from "@/lib/utils";
+
 
 type LatLng = {
     lat: number;
@@ -24,6 +26,7 @@ export function ReportForm() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const { toast } = useToast();
     const formRef = useRef<HTMLFormElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -138,19 +141,35 @@ export function ReportForm() {
             <form ref={formRef} onSubmit={handleSubmit}>
                 <CardContent className="space-y-6">
                     <div className="space-y-2">
-                        <Label htmlFor="picture">
+                        <Label>
                             <Camera className="inline-block mr-2 h-4 w-4" />
                             Upload a Picture
                         </Label>
                         <div className="flex items-center gap-4">
-                            <div className="w-24 h-24 border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50">
+                           <button
+                                type="button"
+                                onClick={() => fileInputRef.current?.click()}
+                                className={cn(
+                                    "w-24 h-24 border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50 hover:border-primary hover:bg-muted transition-colors relative group"
+                                )}
+                           >
                                 {previewUrl ? (
                                     <img src={previewUrl} alt="Preview" className="w-full h-full object-cover rounded-lg" />
                                 ) : (
-                                    <Camera className="w-8 h-8 text-muted-foreground" />
+                                    <>
+                                        <Camera className="w-8 h-8 text-muted-foreground" />
+                                        <div className="absolute -right-2 -top-2 bg-primary text-primary-foreground rounded-full p-1 group-hover:scale-110 transition-transform">
+                                            <Plus className="w-4 h-4" />
+                                        </div>
+                                    </>
                                 )}
+                           </button>
+                            <div className="flex-1">
+                                <p className="text-sm text-muted-foreground">
+                                    Click the button to upload an image of the issue. A clear picture helps us understand the problem better.
+                                </p>
                             </div>
-                            <Input id="picture" name="image" type="file" accept="image/*" onChange={handleImageChange} className="flex-1" required />
+                            <Input ref={fileInputRef} id="picture" name="image" type="file" accept="image/*" onChange={handleImageChange} className="hidden" required />
                         </div>
                     </div>
                     <div className="space-y-2">
