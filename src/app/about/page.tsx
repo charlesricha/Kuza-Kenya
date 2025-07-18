@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Briefcase, Eye, Target } from "lucide-react";
+import { Eye, Target, User } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -47,22 +47,23 @@ export default function AboutPage() {
 
         {/* Our Team Section */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet the Team</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet the Creator</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            We are a passionate team of developers and community organizers committed to making a difference.
+            This project was brought to life by the passion and dedication of a single developer.
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {['Jane Doe', 'John Smith', 'Alex Johnson'].map((name, index) => (
-            <Card key={name} className="text-center bg-card/50 border-0 shadow-lg p-6">
+        <div className="flex justify-center">
+            <Card className="text-center bg-card/50 border-0 shadow-lg p-6 w-full max-w-sm">
               <Avatar className="w-24 h-24 mx-auto mb-4 border-4 border-primary">
-                <AvatarImage src={`https://placehold.co/100x100.png`} data-ai-hint="portrait person" alt={name} />
-                <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={`https://placehold.co/100x100.png`} data-ai-hint="portrait person" alt={"Charles Muthui"} />
+                <AvatarFallback>CM</AvatarFallback>
               </Avatar>
-              <h3 className="text-xl font-semibold">{name}</h3>
-              <p className="text-primary">{['Lead Developer', 'Project Manager', 'Community Lead'][index]}</p>
+              <h3 className="text-xl font-semibold">Charles Muthui</h3>
+              <p className="text-primary">Lead Developer & Creator</p>
+              <p className="text-muted-foreground mt-2">
+                Charles single-handedly designed, developed, and deployed Kuza Kenya with the vision of making a tangible difference in his community.
+              </p>
             </Card>
-          ))}
         </div>
 
       </div>
