@@ -85,7 +85,7 @@ export async function submitReport(formData: FormData) {
 
     if (uploadError) {
       console.error('Supabase upload error:', uploadError);
-      throw new Error(`Failed to upload image: ${uploadError.message}`);
+      throw new Error(uploadError.message);
     }
 
     const { data: urlData } = supabase.storage
@@ -105,7 +105,7 @@ export async function submitReport(formData: FormData) {
 
     if (insertError) {
       console.error('Supabase insert error:', insertError);
-      throw new Error(`Failed to save report: ${insertError.message}`);
+      throw new Error(insertError.message);
     }
 
     return { success: true };
@@ -114,7 +114,9 @@ export async function submitReport(formData: FormData) {
     console.error('Submission failed:', errorMessage);
     
     if (errorMessage.includes('Bucket not found')) {
-      errorMessage = 'Submission failed. The "reports" storage bucket does not exist in your Supabase project. Please create it in the Supabase dashboard.';
+      errorMessage = 'Submission failed. The "reports" storage bucket does not exist. Please create it in your Supabase dashboard and make it public.';
+    } else if (errorMessage.includes('violates row-level security policy')) {
+      errorMessage = 'Submission failed due to database security rules. Please create a new RLS policy in your Supabase dashboard to allow "INSERT" operations for the "reports" table.';
     }
 
     return { error: errorMessage };
