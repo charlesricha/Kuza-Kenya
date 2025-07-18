@@ -24,7 +24,9 @@ const localAnswers: { [key: string]: string } = {
     'how to report': 'You can report an issue by going to our <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a>. Just fill out the form with a picture and description!',
     'report issue': 'You can report an issue by going to our <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a>. Just fill out the form with a picture and description!',
     'pothole': 'Reporting a pothole is easy! Head over to the <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a> to get started.',
-    'rubbish': 'Spotted some rubbish that needs collecting? You can let us know on the <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a>.'
+    'pothol': 'Reporting a pothole is easy! Head over to the <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a> to get started.',
+    'rubbish': 'Spotted some rubbish that needs collecting? You can let us know on the <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a>.',
+    'rubish': 'Spotted some rubbish that needs collecting? You can let us know on the <a href="/report" class="text-primary underline hover:text-primary/80">Report Page</a>.'
 };
 
 export async function getAnswer(question: string) {
