@@ -6,20 +6,8 @@ import { ChatInterface } from '@/components/chat-interface';
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <header className="absolute top-0 z-50 w-full">
-        <div className="container flex h-20 max-w-screen-2xl items-center justify-between px-8">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold">Kuza Kenya</span>
-          </Link>
-          <nav className="hidden md:flex gap-6">
-            <Link href="/" className="text-sm font-medium hover:underline underline-offset-4">Home</Link>
-            <Link href="#about" className="text-sm font-medium text-muted-foreground hover:underline underline-offset-4">About Us</Link>
-            <Link href="/report" className="text-sm font-medium text-muted-foreground hover:underline underline-offset-4">Report</Link>
-          </nav>
-        </div>
-      </header>
       <main className="flex-1">
-        <section className="flex items-center min-h-screen container px-8">
+        <section className="flex items-center min-h-screen container px-8 pt-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="flex flex-col justify-center space-y-6 text-center md:text-left">
               <div className="relative pl-0 md:pl-8">
