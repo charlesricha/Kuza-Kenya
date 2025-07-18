@@ -3,16 +3,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-let supabase: ReturnType<typeof createClient> | null = null;
-if (supabaseUrl && supabaseKey) {
-  supabase = createClient(supabaseUrl, supabaseKey);
-} else {
-  console.log("Supabase credentials not found. Report submission will be disabled.");
-}
-
 const localAnswers: { [key: string]: string } = {
     'hello': "Hello there! I'm Kiboko. How can I assist you with Kuza Kenya today?",
     'hi': "Hi! I'm Kiboko, your friendly assistant. Feel free to ask me about reporting issues.",
@@ -52,16 +42,23 @@ export async function getTip(topic: string) {
 }
 
 export async function submitReport(formData: FormData) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your-supabase-project-url') {
+    const errorMessage = 'The application is not configured to handle submissions. Please contact the administrator.';
+    console.error(`Submission failed: ${errorMessage}`);
+    return { error: errorMessage };
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
   const ReportSchema = z.object({
     description: z.string().min(1, 'Description is required.'),
     latitude: z.coerce.number(),
     longitude: z.coerce.number(),
     image: z.instanceof(File)
   });
-
-  if (!supabase) {
-    return { error: 'Supabase is not configured. Cannot submit report.' };
-  }
 
   try {
     const parsed = ReportSchema.safeParse({
@@ -73,19 +70,22 @@ export async function submitReport(formData: FormData) {
 
     if (!parsed.success) {
       console.error('Form validation failed:', parsed.error);
-      return { error: 'Invalid form data.' };
+      return { error: 'Invalid form data. Please check your inputs.' };
     }
 
     const { description, latitude, longitude, image } = parsed.data;
 
-    const fileName = `${Date.now()}-${image.name}`;
+    // Sanitize file name
+    const fileExtension = image.name.split('.').pop();
+    const safeFileName = `${Date.now()}.${fileExtension}`;
+    
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('reports')
-      .upload(fileName, image);
+      .upload(safeFileName, image);
 
     if (uploadError) {
       console.error('Supabase upload error:', uploadError);
-      throw uploadError;
+      throw new Error(`Failed to upload image: ${uploadError.message}`);
     }
 
     const { data: urlData } = supabase.storage
@@ -105,12 +105,13 @@ export async function submitReport(formData: FormData) {
 
     if (insertError) {
       console.error('Supabase insert error:', insertError);
-      throw insertError;
+      throw new Error(`Failed to save report: ${insertError.message}`);
     }
 
     return { success: true };
   } catch (error) {
-    console.error('Submission error:', error);
-    return { error: 'An unexpected error occurred. Please try again.' };
+    console.error('Submission process error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
+    return { error: errorMessage };
   }
 }
