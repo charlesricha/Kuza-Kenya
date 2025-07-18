@@ -45,8 +45,8 @@ export async function submitReport(formData: FormData) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your-supabase-project-url') {
-    const errorMessage = 'The application is not configured to handle submissions. Please contact the administrator.';
+  if (!supabaseUrl || !supabaseKey || supabaseUrl.includes('your-project-id')) {
+    const errorMessage = 'The application is not configured to handle submissions. Please check your Supabase credentials.';
     console.error(`Submission failed: ${errorMessage}`);
     return { error: errorMessage };
   }
@@ -110,8 +110,8 @@ export async function submitReport(formData: FormData) {
 
     return { success: true };
   } catch (error) {
-    console.error('Submission process error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
-    return { error: errorMessage };
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+    console.error('Submission failed:', errorMessage);
+    return { error: `Submission failed: ${errorMessage}` };
   }
 }
