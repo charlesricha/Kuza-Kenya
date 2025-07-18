@@ -61,7 +61,7 @@ export function ChatInterface() {
           {
             id: `bot-intro-${Date.now()}`,
             role: "bot",
-            content: "Hello! I'm Kiboko, your assistant for KuzaKenya. How can I help you today?"
+            content: "Hello! I'm Kiboko, your assistant for KuzaKenya. How can I help you today? You can ask me things like 'What is Kuza Kenya?' or 'How do I report an issue?'"
           },
           {
             id: `tip-${Date.now()}`,
@@ -93,18 +93,21 @@ export function ChatInterface() {
     setInputValue("");
     setIsLoading(true);
 
+    // Simulate a short delay for a more natural feel
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     const { answer, error } = await getAnswer(userMessage.content);
 
     if (error) {
       toast({
         variant: "destructive",
-        title: "AI Error",
+        title: "Error",
         description: error,
       });
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
         role: "bot",
-        content: "I'm sorry, I seem to be having trouble connecting. Please try again in a moment.",
+        content: "I'm sorry, I had an issue responding. Please try again.",
       }
       setMessages(prev => [...prev, errorMessage]);
     } else if (answer) {
@@ -147,7 +150,7 @@ export function ChatInterface() {
                                 message.role === "tip" && "bg-accent/30 border border-accent rounded-bl-none"
                             )}
                         >
-                            <p className="text-sm">{message.content}</p>
+                            <p className="text-sm" dangerouslySetInnerHTML={{ __html: message.content }} />
                         </div>
                         {message.role === "user" && <UserAvatar />}
                     </div>

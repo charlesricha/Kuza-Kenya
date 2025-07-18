@@ -1,10 +1,2 @@
-import {genkit} from 'genkit';
-import {googleAI} from '@genkit-ai/googleai';
-import { config } from 'dotenv';
-
-config();
-
-export const ai = genkit({
-  plugins: [googleAI()],
-  model: 'googleai/gemini-pro',
-});
+// This file is no longer used and can be safely deleted.
+// The chatbot logic has been moved to a local implementation.

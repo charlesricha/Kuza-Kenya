@@ -2,8 +2,6 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
-import { answerQuestion } from '@/ai/flows/answer-questions';
-import { generateUploadTips } from '@/ai/flows/generate-upload-tips';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -14,24 +12,23 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl!, supabaseKey!);
 
+const localAnswers: { [key: string]: string } = {
+  "what's kuza kenya": "Kuza Kenya is a platform that allows citizens to report community issues like potholes and rubbish by uploading images.",
+  "what is kuza kenya": "Kuza Kenya is a platform that allows citizens to report community issues like potholes and rubbish by uploading images.",
+  "what does it deal with": "It deals with community issues such as potholes, rubbish, street lighting, and other local problems that need attention from authorities.",
+  "how do you report": "It's easy! Just go to the <a href='/report' class='text-primary underline hover:text-primary/80'>Report Page</a> and fill out the form with a picture and location.",
+  "how to report": "It's easy! Just go to the <a href='/report' class='text-primary underline hover:text-primary/80'>Report Page</a> and fill out the form with a picture and location.",
+};
+
+
 export async function getAnswer(question: string) {
-  try {
-    const { answer } = await answerQuestion({ question });
-    return { answer };
-  } catch (error) {
-    console.error("Error in getAnswer:", error);
-    return { error: 'Sorry, I had trouble getting an answer. Please try again.' };
-  }
+  const lowerCaseQuestion = question.toLowerCase().trim();
+  const answer = localAnswers[lowerCaseQuestion] || "I'm sorry, I can only answer questions about what Kuza Kenya is, what it deals with, and how to report an issue. Please try one of those.";
+  return { answer };
 }
 
 export async function getTip(topic: string) {
-  try {
-    const { tip } = await generateUploadTips({ topic });
-    return { tip };
-  } catch (error) {
-    console.error("Error in getTip:", error);
-    return { error: 'Sorry, I had trouble getting a tip for you.' };
-  }
+  return { tip: 'For the best results, make sure your photo is clear and taken during the day.' };
 }
 
 export async function submitReport(formData: FormData) {
