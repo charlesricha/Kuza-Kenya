@@ -19,7 +19,7 @@ export async function getAnswer(question: string) {
     const { answer } = await answerQuestion({ question });
     return { answer };
   } catch (error) {
-    console.error(error);
+    console.error("Error in getAnswer:", error);
     return { error: 'Sorry, I had trouble getting an answer. Please try again.' };
   }
 }
@@ -29,7 +29,7 @@ export async function getTip(topic: string) {
     const { tip } = await generateUploadTips({ topic });
     return { tip };
   } catch (error) {
-    console.error(error);
+    console.error("Error in getTip:", error);
     return { error: 'Sorry, I had trouble getting a tip for you.' };
   }
 }
