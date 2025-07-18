@@ -54,7 +54,7 @@ export function ChatInterface() {
         {
           id: `bot-intro-${Date.now()}`,
           role: "bot",
-          content: "Hello! I'm Kiboko, your assistant for KuzaKenya. How can I help you today? You can ask me things like 'What is Kuza Kenya?' or 'How do I report an issue?'"
+          content: "Hello! I'm Kiboko. How can I help you today? You can try asking one of these questions:<br/><ul class='list-disc list-inside mt-2'><li>What is Kuza Kenya?</li><li>How do I report an issue?</li><li>Tell me about reporting potholes.</li></ul>"
         },
         {
           id: `tip-${Date.now()}`,
@@ -85,28 +85,16 @@ export function ChatInterface() {
     setInputValue("");
     setIsLoading(true);
 
-    const { answer, error } = await getAnswer(userMessage.content);
-
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error,
-      });
-      const errorMessage: Message = {
-        id: `error-${Date.now()}`,
-        role: "bot",
-        content: "I'm sorry, I had an issue responding. Please try again.",
-      }
-      setMessages(prev => [...prev, errorMessage]);
-    } else if (answer) {
-      const botMessage: Message = {
+    const { answer } = await getAnswer(userMessage.content);
+    
+    // The local version doesn't return an error, so we can simplify
+    const botMessage: Message = {
         id: `bot-${Date.now()}`,
         role: "bot",
         content: answer,
-      };
-      setMessages((prev) => [...prev, botMessage]);
-    }
+    };
+    setMessages((prev) => [...prev, botMessage]);
+
     setIsLoading(false);
   };
 
@@ -139,7 +127,7 @@ export function ChatInterface() {
                                 message.role === "tip" && "bg-accent/30 border border-accent rounded-bl-none"
                             )}
                         >
-                            <p className="text-sm" dangerouslySetInnerHTML={{ __html: message.content }} />
+                            <div className="text-sm prose prose-sm prose-invert" dangerouslySetInnerHTML={{ __html: message.content }} />
                         </div>
                         {message.role === "user" && <UserAvatar />}
                     </div>
